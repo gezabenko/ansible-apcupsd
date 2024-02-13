@@ -1,0 +1,17 @@
+---
+# defaults file for ansible-apcupsd
+apcupsd_default__package:
+  - "apcupsd"
+apcupsd_default__service: "apcupsd"
+apcupsd_default__service_enabled: "true"
+apcupsd_default__config_dir: "/etc/apcupsd"
+apcupsd_default__config_file: "apcupsd.conf"
+apcupsd_default__user: "root"
+apcupsd_default__group: "root"
+
+apcupsd__upsname: "ups1"
+apcupsd__upscable: "usb"
+apcupsd__upstype: "usb"
+apcupsd__device: ""
+apcupsd__wakeup: "300"
+apcupsd__beepstate: "L"

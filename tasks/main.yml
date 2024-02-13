@@ -1,0 +1,48 @@
+---
+# tasks file for ansible-apcupsd
+- name: Install packages (Alpine Linux)...
+  become: true
+  community.general.apk:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+  with_items: "{{ apcupsd_default__package }}"
+  when: ansible_os_family == 'Alpine'
+  tags:
+    - package
+    - install
+    - alpine
+
+- name: Install packages (Ubuntu Linux)...
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    cache_valid_time: 14400
+  with_items: "{{ apcupsd_default__package }}"
+  when: ansible_os_family == 'Ubuntu'
+  tags:
+    - package
+    - install
+    - ubuntu
+
+- name: Enable start on boot...
+  become: true
+  ansible.builtin.service:
+    name: "{{ apcupsd_default__service }}"
+    enabled: "{{ apcupsd_default__service_enabled }}"
+  tags:
+    - service
+
+- name: Config daemon...
+  become: true
+  ansible.builtin.template:
+    src: apcupsd.conf.j2
+    dest: "{{ apcupsd_default__config_dir }}/{{ apcupsd_default__config_file }}"
+    owner: "{{ apcupsd_default__user }}"
+    group: "{{ apcupsd_default__group }}"
+    mode: "0640"
+    backup: true
+  notify: restart apcupsd
+  tags:
+    - config
